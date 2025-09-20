@@ -1,0 +1,19 @@
+{% extends "main/base.html" %}
+{% block content %}
+<div class="container" style="max-width:600px;">
+  <h3>Claim a link</h3>
+  <p>Enter the short link hash and the owner token you saved when you created the link.</p>
+  <form method="post">
+    {% csrf_token %}
+    <div class="mb-3">
+      <label class="form-label">Link Hash</label>
+      <input type="text" name="hash" class="form-control" placeholder="e.g. abCd123" required>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Owner Token</label>
+      <input type="text" name="owner_token" class="form-control" required>
+    </div>
+    <button class="btn btn-primary" type="submit">Claim</button>
+  </form>
+</div>
+{% endblock %}

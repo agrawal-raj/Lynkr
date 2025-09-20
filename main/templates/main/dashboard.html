@@ -1,0 +1,53 @@
+{% extends "main/base.html" %}
+{% block content %}
+<h2>Your Shortened URLs</h2>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Original URL</th>
+      <th>Shortened URL</th>
+      <th>Status</th>
+      <th>Clicks</th>
+      <th>Created</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for link in page_obj %}
+    <tr>
+      <td style="max-width:360px; word-break:break-word;">{{ link.original_url }}</td>
+      <td><a href="{{ shortened_url|default:request.scheme|add:'://'|add:request.get_host }}{% comment %}we will construct link below{% endcomment %}{{ link.hash }}" target="_blank">{{ request.scheme }}://{{ request.get_host }}/{{ link.hash }}</a></td>
+      <td>{% if link.is_active %}<span class="text-success">Active</span>{% else %}<span class="text-danger">Inactive</span>{% endif %}</td>
+      <td>{{ link.click_count }}</td>
+      <td>{{ link.creation_date|date:"Y-m-d H:i" }}</td>
+      <td>
+        <form method="POST" action="{% if link.is_active %}{% url 'deactivate_link' link.hash %}{% else %}{% url 'activate_link' link.hash %}{% endif %}" style="display:inline">
+          {% csrf_token %}
+          <button class="btn btn-sm {% if link.is_active %}btn-danger{% else %}btn-success{% endif %}" type="submit">
+            {% if link.is_active %}Deactivate{% else %}Activate{% endif %}
+          </button>
+        </form>
+
+        <a class="btn btn-sm btn-outline-primary" href="{% url 'stats' link.hash %}">View Stats</a>
+      </td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="6">You have not created any links yet.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<nav>
+  <ul class="pagination">
+    {% if page_obj.has_previous %}
+      <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+    {% endif %}
+    <li class="page-item disabled"><span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span></li>
+    {% if page_obj.has_next %}
+      <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+    {% endif %}
+  </ul>
+</nav>
+
+{% endblock %}

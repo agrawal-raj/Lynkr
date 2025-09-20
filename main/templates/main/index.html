@@ -1,0 +1,98 @@
+
+
+{% extends "main/base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="card p-4">
+            <div class="text-center mb-4">
+                <h1 class="mb-3"><i class="bi bi-link-45deg"></i> Lynkr</h1>
+                <p class="text-muted">Shorten your URLs in seconds</p>
+            </div>
+            
+            {% if error %}
+                <div class="alert alert-danger">{{ error }}</div>
+            {% endif %}
+            
+            <form method="POST" action="{% url 'shorten_post' %}">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="urlInput" class="form-label">Enter your long URL</label>
+                    <input 
+                        type="url" 
+                        class="form-control form-control-lg" 
+                        id="urlInput" 
+                        name="url" 
+                        placeholder="https://example.com" 
+                        required
+                        value="{{ url|default:'' }}">
+                </div>
+                
+                <div class="mb-3">
+                    <label for="customHash" class="form-label">
+                        Custom URL (optional)
+                        <small class="text-muted">e.g., my-link</small>
+                    </label>
+                    <div class="input-group">
+                        <span class="input-group-text" id="domain-addon">
+                            {{ request.get_host }}/
+                        </span>
+                        <input 
+                            type="text" 
+                            class="form-control" 
+                            id="customHash" 
+                            name="custom_hash" 
+                            placeholder="my-custom-link" 
+                            aria-describedby="domain-addon"
+                            value="{{ custom_hash|default:'' }}">
+                    </div>
+                </div>
+                
+                <!-- 🔹 NEW Expiry Days Field -->
+                <div class="mb-3">
+                    <label for="expireDays" class="form-label">
+                        Expire after (days) <small class="text-muted">(optional)</small>
+                    </label>
+                    <input 
+                        type="number" 
+                        class="form-control" 
+                        id="expireDays" 
+                        name="expire_days" 
+                        placeholder="e.g., 7"
+                        min="1">
+                    <small class="text-muted">Leave blank to keep the link active indefinitely.</small>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-lg w-100">
+                    <i class="bi bi-scissors"></i> Shorten URL
+                </button>
+            </form>
+            
+            <div class="row mt-5">
+                <div class="col-md-4 text-center">
+                    <div class="feature-icon">
+                        <i class="bi bi-lightning"></i>
+                    </div>
+                    <h5>Instant</h5>
+                    <p>Shorten URLs in milliseconds</p>
+                </div>
+                <div class="col-md-4 text-center">
+                    <div class="feature-icon">
+                        <i class="bi bi-shield-lock"></i>
+                    </div>
+                    <h5>Secure</h5>
+                    <p>All links are HTTPS secured</p>
+                </div>
+                <div class="col-md-4 text-center">
+                    <div class="feature-icon">
+                        <i class="bi bi-graph-up"></i>
+                    </div>
+                    <h5>Analytics</h5>
+                    <p>Track link performance</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

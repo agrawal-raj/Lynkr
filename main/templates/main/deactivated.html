@@ -1,0 +1,14 @@
+{% extends "main/base.html" %}
+{% block content %}
+<div class="card p-4">
+  <h3>Link Deactivated</h3>
+  <p>The short link <strong>{{ link.hash }}</strong> has been deactivated and cannot be opened.</p>
+
+  <p>
+    <strong>Original URL:</strong> {{ link.original_url }}<br>
+    <strong>Status:</strong> <span class="text-danger">Inactive</span>
+  </p>
+
+  <!-- <a href="{% url 'stats' link.hash %}" class="btn btn-primary">View Stats / Reactivate</a> -->
+</div>
+{% endblock %}
